@@ -1,0 +1,70 @@
+name: 버그 제보
+description: 발견한 오류를 등록합니다
+title: "[작업코드] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        제목은 `[작업코드] 증상` 형식으로 적어주세요. 작업코드는 **고칠 사람** 기준입니다. 모르면 해당 화면·도메인 담당자 코드로 적어주세요.
+        예: `[fe04] 지도 보기에서 순번 마커가 안 보임`
+  - type: dropdown
+    id: code
+    attributes:
+      label: 작업코드 (고칠 사람)
+      options: [be01, be02, be03, be04, be05, be06, fe01, fe02, fe03, fe04, fe05, fe06]
+    validations:
+      required: true
+  - type: dropdown
+    id: screen
+    attributes:
+      label: 발생 화면
+      options:
+        - 해당 없음 (백엔드 API)
+        - HOM-01 홈 / 바로 추천
+        - HOM-02 주변 장소 탐색
+        - CON-01 외출 조건 설정
+        - CON-02 위치 설정
+        - RES-01 추천 결과 목록
+        - DET-01 추천 결과 상세
+        - DET-02 코스 지도 상세
+        - DET-03 장소 교체
+        - MY-01 마이페이지
+        - MY-02 저장한 코스 목록
+        - MY-03 저장한 코스 상세
+        - MY-04 회원 정보 수정·탈퇴
+        - AUT-01 로그인
+        - AUT-02 회원가입
+        - 관리자 (/admin)
+    validations:
+      required: true
+  - type: textarea
+    id: symptom
+    attributes:
+      label: 현상
+      description: 어떤 문제가 생기는지
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 재현 방법
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대 동작
+      description: 원래 어떻게 되어야 하는지
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: 환경 / 에러 로그 / 스크린샷
+      description: 브라우저·기기, 콘솔 에러, 서버 로그 등. 이미지는 끌어다 놓으면 첨부됩니다
+      placeholder: 예) Chrome / 모바일 크기, 콘솔에 "Cannot read properties of undefined"

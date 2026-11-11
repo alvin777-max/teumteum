@@ -1,0 +1,41 @@
+name: 문서 작업
+description: API 명세, ERD, 화면 설계서 등 문서를 작성·수정합니다
+title: "[작업코드] "
+labels: ["docs"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        제목 예: `[be05] ERD 초안 작성`, `[be01] API 명세서 취합`
+  - type: dropdown
+    id: code
+    attributes:
+      label: 작업코드
+      options: [be01, be02, be03, be04, be05, be06, fe01, fe02, fe03, fe04, fe05, fe06]
+    validations:
+      required: true
+  - type: dropdown
+    id: doc
+    attributes:
+      label: 문서 종류
+      options:
+        - API 명세서
+        - ERD · 테이블 정의서
+        - 화면 설계서 · 화면-API 매핑표
+        - 시연 시나리오
+        - 규칙 문서 (AGENTS.md, README)
+        - 기타
+    validations:
+      required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: 작업 내용
+    validations:
+      required: true
+  - type: textarea
+    id: share
+    attributes:
+      label: 공유·확인할 사람
+      description: 이 문서를 보고 맞춰야 하는 담당자
+      placeholder: 예) 회원 테이블 — 김용현, 정종화 확인 필요

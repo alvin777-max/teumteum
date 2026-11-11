@@ -1,0 +1,42 @@
+name: 개선 · 리팩터링
+description: 이미 있는 기능을 개선하거나 코드를 정리합니다
+title: "[작업코드] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        기능 변화 없이 코드만 정리하는 경우 등록 후 라벨을 `refactor` 로 바꿔주세요.
+        제목 예: `[be03] 소요시간 계산 로직 분리`
+  - type: dropdown
+    id: code
+    attributes:
+      label: 작업코드
+      options: [be01, be02, be03, be04, be05, be06, fe01, fe02, fe03, fe04, fe05, fe06]
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: 현재 상태
+      description: 지금 무엇이 불편하거나 문제인지
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 개선 내용
+      description: 어떻게 바꿀지
+    validations:
+      required: true
+  - type: textarea
+    id: tasks
+    attributes:
+      label: 작업 목록
+      value: |
+        - [ ]
+  - type: textarea
+    id: impact
+    attributes:
+      label: 영향 범위
+      description: 다른 담당자의 도메인이나 global/ 에 영향이 있으면 적어주세요

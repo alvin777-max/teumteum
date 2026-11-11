@@ -1,11 +1,21 @@
 @import 'tailwindcss';
 
+/*
+ * 디자인 토큰 (임시)
+ * 화면설계서 v0.2에 색상·폰트 값이 없어 임시로 정함. 디자인 확정 시 이 블록만 바꾸면 전체에 반영된다.
+ * 사용 예: bg-primary, text-primary, bg-primary-light, border-line
+ */
 @theme {
   --font-sans: system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+
+  --color-primary: #3b6cf6;
+  --color-primary-dark: #2a55d4;
+  --color-primary-light: #eaf0ff;
+  --color-line: #e5e7eb;
 }
 
 @layer base {
   body {
-    @apply bg-neutral-100;
+    @apply bg-neutral-100 text-neutral-800;
   }
 }

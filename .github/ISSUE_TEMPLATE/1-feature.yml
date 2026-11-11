@@ -1,0 +1,73 @@
+name: 기능 작업
+description: 새로 구현할 기능을 등록합니다
+title: "[작업코드] "
+labels: ["feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        제목은 `[작업코드] 할 일` 형식으로 적어주세요. 예: `[be01] 로그인 API 구현`, `[fe02] 조건 선택 화면 구현`
+        작업코드는 AGENTS.md 8장 참고 (01 김용현 · 02 정종일 · 03 나혜빈 · 04 유지수 · 05 김하윤 · 06 정종화)
+  - type: dropdown
+    id: code
+    attributes:
+      label: 작업코드
+      options: [be01, be02, be03, be04, be05, be06, fe01, fe02, fe03, fe04, fe05, fe06]
+    validations:
+      required: true
+  - type: dropdown
+    id: screen
+    attributes:
+      label: 관련 화면 (화면설계서 v1.0)
+      options:
+        - 해당 없음 (백엔드·공통)
+        - HOM-01 홈 / 바로 추천
+        - HOM-02 주변 장소 탐색
+        - CON-01 외출 조건 설정
+        - CON-02 위치 설정
+        - RES-01 추천 결과 목록
+        - DET-01 추천 결과 상세
+        - DET-02 코스 지도 상세
+        - DET-03 장소 교체
+        - MY-01 마이페이지
+        - MY-02 저장한 코스 목록
+        - MY-03 저장한 코스 상세
+        - MY-04 회원 정보 수정·탈퇴
+        - AUT-01 로그인
+        - AUT-02 회원가입
+        - 관리자 (/admin)
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 기능 설명
+      description: 무엇을, 왜 만드는지
+      placeholder: 예) 이메일·비밀번호로 로그인하고 JWT를 발급하는 API
+    validations:
+      required: true
+  - type: textarea
+    id: tasks
+    attributes:
+      label: 작업 목록
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: 완료 조건
+      description: 어떻게 되면 끝난 것인지
+      placeholder: 예) Swagger에서 로그인 요청 시 토큰이 응답된다
+  - type: textarea
+    id: api
+    attributes:
+      label: API (백엔드·연동 작업일 때)
+      placeholder: 예) POST /api/members/login — LoginRequest → LoginResponse
+  - type: textarea
+    id: ref
+    attributes:
+      label: 참고
+      description: 관련 문서, 이슈, 스크린샷
