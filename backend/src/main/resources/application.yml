@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: teumteum
+  profiles:
+    active: local   # 로컬 설정은 application-local.yml (gitignore)
+
+server:
+  port: 8080
+
+# 영속성 기술(JPA / MyBatis) 확정 후 공통 설정을 여기에 추가

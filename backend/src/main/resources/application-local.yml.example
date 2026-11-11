@@ -1,0 +1,16 @@
+# 이 파일을 복사해서 application-local.yml 로 만든 뒤 값을 채우세요.
+# application-local.yml 은 .gitignore 에 등록되어 있어 커밋되지 않습니다.
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/teumteum?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+kakao:
+  rest-api-key:            # 카카오 로컬 API (REST API 키)
+
+jwt:
+  secret:                  # 32자 이상 임의 문자열
+  access-token-validity-seconds: 3600

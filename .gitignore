@@ -1,0 +1,33 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+*.iml
+out/
+.vscode/*
+!.vscode/extensions.json
+
+# Backend
+backend/build/
+backend/.gradle/
+backend/bin/
+backend/src/main/resources/application-local.yml
+backend/src/main/resources/application-prod.yml
+
+# Frontend
+frontend/node_modules/
+frontend/out/
+frontend/dist/
+frontend/*.tsbuildinfo
+frontend/.env.local
+frontend/.env.*.local
+
+# Logs
+*.log
+
+# Claude Code 개인 설정
+CLAUDE.local.md
+.claude/settings.local.json
