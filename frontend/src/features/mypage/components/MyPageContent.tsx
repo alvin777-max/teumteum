@@ -1,15 +1,20 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useAuthStore } from '../../../shared/auth/authStore'
 import Button from '../../../shared/components/Button'
+import ConfirmDialog from '../../../shared/components/ConfirmDialog'
+import { useSavedCourseStore } from '../store'
 
 /**
  * 마이페이지 (MY-01)
- * - 회원: 닉네임·이메일, 메뉴 3개(저장한 코스 / 회원 정보 수정·탈퇴 / 로그아웃)
+ * - 회원: 닉네임·이메일, 메뉴(저장한 코스 / 회원 정보 수정 / 로그아웃 / 회원 탈퇴)
  * - 비회원: 로그인 안내와 로그인 버튼
  */
 export default function MyPageContent() {
   const navigate = useNavigate()
   const { isLoggedIn, user, logout } = useAuthStore()
+  const savedCount = useSavedCourseStore((s) => s.savedCourses.length)
+  const [confirmLogout, setConfirmLogout] = useState(false)
 
   if (!isLoggedIn || !user) {
     return (
@@ -22,12 +27,6 @@ export default function MyPageContent() {
     )
   }
 
-  const handleLogout = () => {
-    if (!confirm('로그아웃할까요?')) return
-    logout()
-    navigate('/', { replace: true })
-  }
-
   return (
     <>
       <section className="m-4 rounded-2xl bg-neutral-100 p-5">
@@ -36,24 +35,43 @@ export default function MyPageContent() {
       </section>
 
       <ul className="border-t border-line">
-        <MenuItem to="/mypage/courses" label="저장한 코스" />
-        <MenuItem to="/mypage/edit" label="회원 정보 수정·탈퇴" />
-        <li>
-          <button type="button" onClick={handleLogout} className="flex h-14 w-full items-center px-4 text-left text-sm text-neutral-500">
+        <MenuItem to="/mypage/courses" label="저장한 코스" count={savedCount} />
+        <MenuItem to="/mypage/edit" label="회원 정보 수정" />
+        <li className="border-b border-line">
+          <button type="button" onClick={() => setConfirmLogout(true)} className="flex h-14 w-full items-center px-4 text-left text-sm">
             로그아웃
           </button>
         </li>
+        <li className="border-b border-line">
+          <Link to="/mypage/edit?withdraw=1" className="flex h-14 items-center px-4 text-sm text-neutral-400">
+            회원 탈퇴
+          </Link>
+        </li>
       </ul>
+
+      {confirmLogout && (
+        <ConfirmDialog
+          message="로그아웃할까요?"
+          confirmLabel="로그아웃"
+          onCancel={() => setConfirmLogout(false)}
+          onConfirm={() => {
+            logout()
+            navigate('/', { replace: true })
+          }}
+        />
+      )}
     </>
   )
 }
 
-function MenuItem({ to, label }: { to: string; label: string }) {
+function MenuItem({ to, label, count }: { to: string; label: string; count?: number }) {
   return (
     <li className="border-b border-line">
       <Link to={to} className="flex h-14 items-center justify-between px-4 text-sm">
         {label}
-        <span className="text-neutral-300">›</span>
+        <span className="text-neutral-400">
+          {count !== undefined && <span className="mr-1">{count}</span>}›
+        </span>
       </Link>
     </li>
   )

@@ -42,7 +42,9 @@ export default function LoginForm() {
     <form onSubmit={handleSubmit} className="flex flex-1 flex-col gap-4 px-6 py-8" noValidate>
       <div className="mb-4 text-center">
         <p className="text-3xl font-extrabold text-primary">틈틈</p>
-        <p className="mt-2 text-sm text-neutral-500">로그인하고 코스를 저장해 보세요</p>
+        <p className="mt-2 text-sm text-neutral-500">
+          {redirect?.pendingAction === 'save' ? '코스를 저장하려면 로그인이 필요해요' : '로그인하고 코스를 저장해 보세요'}
+        </p>
       </div>
 
       <TextField label="이메일" name="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} error={error.email} />

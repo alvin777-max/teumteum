@@ -16,7 +16,7 @@ import SignupPage from '../pages/SignupPage'
 import RequireAuth from '../shared/auth/RequireAuth'
 import Layout from '../shared/layout/Layout'
 
-// 화면 ID는 화면설계서 v1.0 기준
+// 화면 ID는 화면설계서 v2.0 기준 (docs/틈틈 화면설계서.md)
 export const router = createBrowserRouter([
   {
     path: '/',

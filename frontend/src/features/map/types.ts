@@ -5,20 +5,42 @@ export interface KakaoLatLng {
   getLng(): number
 }
 
+export interface KakaoLatLngBounds {
+  extend(latlng: KakaoLatLng): void
+}
+
 export interface KakaoMapInstance {
   setCenter(latlng: KakaoLatLng): void
+  panTo(latlng: KakaoLatLng): void
+  setLevel(level: number): void
+  setBounds(bounds: KakaoLatLngBounds): void
   relayout(): void
 }
 
-export interface KakaoMarker {
+/** 지도 위에 올리는 것(마커·오버레이·선)의 공통 부분 */
+export interface KakaoOverlay {
   setMap(map: KakaoMapInstance | null): void
 }
 
 export interface KakaoMapsApi {
   load(callback: () => void): void
   LatLng: new (lat: number, lng: number) => KakaoLatLng
+  LatLngBounds: new () => KakaoLatLngBounds
   Map: new (container: HTMLElement, options: { center: KakaoLatLng; level: number }) => KakaoMapInstance
-  Marker: new (options: { position: KakaoLatLng; map?: KakaoMapInstance }) => KakaoMarker
+  Marker: new (options: { position: KakaoLatLng; map?: KakaoMapInstance }) => KakaoOverlay
+  CustomOverlay: new (options: {
+    position: KakaoLatLng
+    content: HTMLElement | string
+    map?: KakaoMapInstance
+    yAnchor?: number
+  }) => KakaoOverlay
+  Polyline: new (options: {
+    path: KakaoLatLng[]
+    strokeWeight?: number
+    strokeColor?: string
+    strokeOpacity?: number
+    map?: KakaoMapInstance
+  }) => KakaoOverlay
 }
 
 declare global {

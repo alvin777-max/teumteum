@@ -1,36 +1,33 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router'
 import BottomActionBar from '../../../shared/components/BottomActionBar'
 import Button from '../../../shared/components/Button'
 import Chip from '../../../shared/components/Chip'
 import ChipGroup from '../../../shared/components/ChipGroup'
 import EmptyState from '../../../shared/components/EmptyState'
+import Toast from '../../../shared/components/Toast'
 import { CATEGORIES } from '../../../shared/types/domain'
 import { isRandomCondition, useConditionStore } from '../../condition/store'
-import { MOCK_COURSES } from '../mock'
-import CourseCard from './CourseCard'
+import { useRecommendStore } from '../store'
 import ConditionSummary from './ConditionSummary'
+import CourseCard from './CourseCard'
 
 const ALL = '전체'
 
-const SORT_OPTIONS = [
-  { value: 'RECOMMEND', label: '추천순' },
-  { value: 'SHORT', label: '짧은 시간순' },
-  { value: 'LESS_WALK', label: '걷기 적은 순' },
-] as const
-type SortType = (typeof SORT_OPTIONS)[number]['value']
+/** 한 번에 보여주는 코스 수 (화면설계서 결정 3: 3개, 정렬 없음) */
+const COURSE_COUNT = 3
 
 /**
  * 추천 결과 목록 (RES-01)
- * TODO(나혜빈): 추천 API 연동 (현재 MOCK_COURSES), '다시 추천' 시 다른 조합 요청, 추천 개수(1~3개) 팀 결정
+ * TODO(나혜빈): 추천 API 연동 (현재 mock). 빈 결과면 백엔드가 반경을 넓혀 다시 찾는다
  */
 export default function RecommendResult() {
   const navigate = useNavigate()
   const condition = useConditionStore()
+  const { courses, reload } = useRecommendStore()
   const [subCategory, setSubCategory] = useState(ALL)
-  const [sort, setSort] = useState<SortType>('RECOMMEND')
-
-  const courses = MOCK_COURSES
+  const [toast, setToast] = useState<string | null>(null)
+  const closeToast = useCallback(() => setToast(null), [])
 
   // 세분류 필터: 선택한 대분류의 세분류. 랜덤이면 결과 장소들의 세분류
   const subCategories = isRandomCondition(condition)
@@ -38,8 +35,16 @@ export default function RecommendResult() {
     : CATEGORIES.filter((c) => condition.categories.includes(c.code)).flatMap((c) => c.subCategories)
 
   const filtered = courses
+    .slice(0, COURSE_COUNT)
     .filter((c) => subCategory === ALL || c.places.some((p) => p.subCategory === subCategory))
-    .toSorted((a, b) => (sort === 'SHORT' ? a.totalMinutes - b.totalMinutes : 0))
+
+  const handleReload = () => {
+    if (!reload()) {
+      setToast('잠시 후 다시 시도해 주세요')
+      return
+    }
+    setSubCategory(ALL)
+  }
 
   return (
     <>
@@ -52,28 +57,16 @@ export default function RecommendResult() {
             </Chip>
           ))}
         </ChipGroup>
-        {/* 정렬: UI 고려 단계 (팀 결정 필요) */}
-        <div className="flex gap-3 text-xs">
-          {SORT_OPTIONS.map((o) => (
-            <button
-              key={o.value}
-              type="button"
-              onClick={() => setSort(o.value)}
-              className={sort === o.value ? 'font-bold text-neutral-800' : 'text-neutral-400'}
-            >
-              {o.label}
-            </button>
-          ))}
-        </div>
       </div>
 
       {filtered.length > 0 ? (
         <ul className="flex flex-col gap-3 p-4">
-          {filtered.map((course) => (
+          {filtered.map((course, i) => (
             <li key={course.courseId}>
-              <CourseCard course={course} to={`/results/${course.courseId}`} />
+              <CourseCard course={course} index={i + 1} to={`/results/${course.courseId}`} />
             </li>
           ))}
+          <li className="text-center text-xs text-neutral-400">이동·체류시간은 예상값이라 실제와 다를 수 있어요</li>
         </ul>
       ) : (
         <EmptyState
@@ -90,8 +83,10 @@ export default function RecommendResult() {
         <Button variant="secondary" onClick={() => navigate('/condition')}>
           조건 바꾸기
         </Button>
-        <Button onClick={() => setSubCategory(ALL)}>다시 추천</Button>
+        <Button onClick={handleReload}>다시 추천</Button>
       </BottomActionBar>
+
+      {toast && <Toast message={toast} onClose={closeToast} />}
     </>
   )
 }

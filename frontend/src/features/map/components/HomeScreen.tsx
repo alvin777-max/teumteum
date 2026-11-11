@@ -14,7 +14,10 @@ interface HomeScreenProps {
   nearby?: boolean
 }
 
-/** 홈 / 바로 추천 (HOM-01) + 주변 장소 탐색 시트 (HOM-02). 지도·검색창은 고정 */
+/**
+ * 홈 / 바로 추천 (HOM-01) + 주변 장소 탐색 시트 (HOM-02). 지도·검색창·하단바는 고정.
+ * 지도는 기본 좌표(서울시청)로 먼저 그리고, 현재 위치를 받으면 이동한다.
+ */
 export default function HomeScreen({ nearby = false }: HomeScreenProps) {
   const navigate = useNavigate()
   const { position, denied } = useCurrentPosition()
@@ -38,18 +41,24 @@ export default function HomeScreen({ nearby = false }: HomeScreenProps) {
   }
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex h-dvh flex-col">
       <div className="relative flex-1">
         <KakaoMap center={position} markers={markers} level={nearby && radius > 1000 ? 6 : 4} className="absolute inset-0" />
 
-        <div className="absolute inset-x-0 top-0 z-10 p-4">
+        <div className="absolute inset-x-0 top-0 z-30 flex flex-col gap-2 p-4">
           <HomeSearchBar />
+          {denied && (
+            <p className="rounded-lg bg-white/95 px-3 py-2 text-xs text-neutral-600 shadow">
+              위치를 사용할 수 없어 서울시청 기준으로 보여드려요. 위치를 직접 설정해 주세요.
+            </p>
+          )}
         </div>
 
         {nearby ? (
-          <NearbySheet denied={denied} radius={radius} onRadiusChange={setRadius} />
+          <NearbySheet radius={radius} onRadiusChange={setRadius} />
         ) : (
-          <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-2 p-4">
+          <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-2 rounded-t-2xl bg-white p-4 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
+            <p className="mb-1 text-center font-bold">남는 시간, 어디로 가볼까요?</p>
             <Button onClick={startRecommend}>지금 외출 추천</Button>
             <Button variant="secondary" onClick={() => navigate('/nearby')}>
               주변 장소 탐색

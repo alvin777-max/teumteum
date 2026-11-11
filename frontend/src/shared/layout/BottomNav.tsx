@@ -2,7 +2,7 @@ import { NavLink } from 'react-router'
 import { useAuthStore } from '../auth/authStore'
 
 /**
- * 하단바: 홈·주변 탐색 화면에만 고정 (화면설계서 v1.0 공통)
+ * 하단바: 홈·주변 탐색 화면에만 고정 (화면설계서 v2.0)
  * 비로그인 상태에서 '저장한 코스'를 누르면 보호 라우트가 로그인 화면으로 보낸다.
  */
 export default function BottomNav() {

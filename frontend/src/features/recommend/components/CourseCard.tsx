@@ -1,42 +1,43 @@
+import { Fragment } from 'react'
 import { Link } from 'react-router'
 import { formatMinutes } from '../../../shared/utils/format'
-import { getTotalTravelMinutes, type Course } from '../types'
+import { getLegMode, type Course } from '../types'
+import PlaceThumbnail from './PlaceThumbnail'
 
 interface CourseCardProps {
   course: Course
+  /** 카드 제목 앞 순번 (예: 추천 1) */
+  index: number
   /** 카드를 눌렀을 때 이동할 주소 */
   to: string
-  /** 카드 아래 추가 정보 (예: 저장일) */
-  footer?: string
 }
 
-/** 코스 카드: 장소 수, 총 소요시간, 방문 순서, 장소 간 이동시간 (RES-01 ④, MY-02) */
-export default function CourseCard({ course, to, footer }: CourseCardProps) {
+/** 추천 코스 카드: 썸네일, 장소 수, 총 소요시간, 방문 순서, 장소 간 이동시간 (RES-01 ③) */
+export default function CourseCard({ course, index, to }: CourseCardProps) {
   return (
-    <Link to={to} className="block rounded-2xl border border-line p-4">
-      <div className="flex items-center justify-between text-sm">
-        <span className="font-bold">장소 {course.places.length}곳</span>
-        <span className="font-semibold text-primary">총 {formatMinutes(course.totalMinutes)}</span>
+    <Link to={to} className="flex gap-3 rounded-2xl border border-line p-4">
+      <PlaceThumbnail place={course.places[0]} />
+
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-bold">
+          추천 {index} · {course.places.length}곳 · {formatMinutes(course.totalMinutes)}
+          {course.estimated && (
+            <span className="ml-1.5 rounded bg-amber-50 px-1.5 py-0.5 text-[11px] font-semibold text-amber-600">예상 시간</span>
+          )}
+        </p>
+        <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-sm">
+          {course.places.map((place, i) => (
+            <Fragment key={place.placeId}>
+              {i > 0 && (
+                <span className="text-xs text-neutral-400">
+                  → {getLegMode(course, place.transitInfo)} {formatMinutes(place.travelMinutes)} →
+                </span>
+              )}
+              <span className="font-medium">{place.name}</span>
+            </Fragment>
+          ))}
+        </p>
       </div>
-
-      <ol className="mt-3 flex flex-col gap-1">
-        {course.places.map((place) => (
-          <li key={place.placeId} className="flex items-baseline gap-2 text-sm">
-            <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-white">
-              {place.visitOrder}
-            </span>
-            <span className="truncate">{place.name}</span>
-            <span className="shrink-0 text-xs text-neutral-400">
-              {place.subCategory} · 이동 {formatMinutes(place.travelMinutes)}
-            </span>
-          </li>
-        ))}
-      </ol>
-
-      <p className="mt-3 text-xs text-neutral-500">
-        이동 합계 {formatMinutes(getTotalTravelMinutes(course))}
-        {footer && ` · ${footer}`}
-      </p>
     </Link>
   )
 }

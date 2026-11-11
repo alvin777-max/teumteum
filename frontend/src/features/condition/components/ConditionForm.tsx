@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router'
 import BottomActionBar from '../../../shared/components/BottomActionBar'
 import Button from '../../../shared/components/Button'
 import SegmentedControl from '../../../shared/components/SegmentedControl'
-import { TRANSPORT_OPTIONS } from '../../../shared/types/domain'
+import { MAX_CATEGORIES, TRANSPORT_OPTIONS } from '../../../shared/types/domain'
 import { formatMinutes } from '../../../shared/utils/format'
+import { useRecommendStore } from '../../recommend/store'
 import { useConditionStore } from '../store'
 import CategorySelector from './CategorySelector'
 import LocationFields from './LocationFields'
@@ -14,9 +15,10 @@ import TimeSelector from './TimeSelector'
 export default function ConditionForm() {
   const navigate = useNavigate()
   const { origin, availableMinutes, transportType, setTransportType } = useConditionStore()
+  const requestRecommend = useRecommendStore((s) => s.request)
 
-  // 출발지와 시간이 없으면 비활성. 카테고리는 비어 있으면 랜덤으로 진행
-  const canSubmit = origin !== null && availableMinutes > 0
+  // 출발지가 없으면 비활성 (시간은 항상 값이 있다. 0분 = 시간 제한 없음). 카테고리는 비어 있으면 랜덤으로 진행
+  const canSubmit = origin !== null
 
   return (
     <>
@@ -25,7 +27,7 @@ export default function ConditionForm() {
           <LocationFields />
         </Section>
 
-        <Section title={`시간 · ${formatMinutes(availableMinutes)}`}>
+        <Section title={`시간 · ${availableMinutes === 0 ? '시간 제한 없음' : formatMinutes(availableMinutes)}`}>
           <TimeSelector />
         </Section>
 
@@ -33,13 +35,19 @@ export default function ConditionForm() {
           <SegmentedControl options={TRANSPORT_OPTIONS} value={transportType} onChange={setTransportType} />
         </Section>
 
-        <Section title="카테고리">
+        <Section title={`카테고리 (최대 ${MAX_CATEGORIES}개)`}>
           <CategorySelector />
         </Section>
       </div>
 
       <BottomActionBar>
-        <Button disabled={!canSubmit} onClick={() => navigate('/results')}>
+        <Button
+          disabled={!canSubmit}
+          onClick={() => {
+            requestRecommend()
+            navigate('/results')
+          }}
+        >
           추천받기
         </Button>
       </BottomActionBar>
